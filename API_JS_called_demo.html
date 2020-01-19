@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>上传图片</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="yanzRight">
+    <input name="evidence" onchange="uploadImg(this,'preview')" type="file" />
+    <span class="dui" id="imgOrder_dui" style="display: none;"></span>
+  </div>
+  <div id="preview">
+    <img src="" alt="" id="imghead5" height="400" width="400" />
+  </div>
+  <p id="result">
+  </p>
+</body>
+
+<script>
+  function uploadImg(file, imgNum) {
+    var widthImg = 500; //显示图片的width
+    var heightImg = 500; //显示图片的height
+    var div = document.getElementById(imgNum);
+    if (file.files && file.files[0]) {
+      div.innerHTML = '<img id="upImg">'; //生成图片
+      var img = document.getElementById('upImg'); //获得用户上传的图片节点
+      img.onload = function() {
+        img.width = widthImg;
+        img.height = heightImg;
+      }
+      var reader = new FileReader(); //判断图片是否加载完毕
+      reader.onload = function(evt) {
+        if (reader.readyState === 2) { //加载完毕后赋值
+          img.src = evt.target.result;
+        }
+      }
+      reader.readAsDataURL(file.files[0]);
+      console.log(file.files[0].name);
+      // console.log(img.path);
+
+      console.log("1");
+      var url = "http://127.0.0.1:8222/recognition";
+      var http = new XMLHttpRequest();
+
+
+      var params = JSON.stringify({path:"test/" + file.files[0].name});
+      // var parms = "'path' = 'test/rrr.jpg'";
+      http.open("POST", url, false);
+      http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+      http.send(params);
+      // document.getElementById("result").innerHTML = http.responseText;
+      console.log(http.responseText);
+      document.getElementById("result").innerHTML = http.responseText;
+      // $.post("http://127.0.0.1:8222/recognition", {
+      //     path: "test/rrr.jpg"
+      //   },
+      //   function(data) {
+      //     alert("Data Loaded: " + data);
+      //   });
+      // console.log("2")
+
+  }
+
+    //document.write(Date())
+
+  }
+</script>
+
+</html>
